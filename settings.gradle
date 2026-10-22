@@ -1,0 +1,14 @@
+rootProject.name = 'panorama-graph-gradle'
+
+// As pastas têm nomes curtos; os artefatos publicados, o nome do produto.
+include 'panorama-graph-gradle-plugin', 'panorama-graph-spring-test'
+project(':panorama-graph-gradle-plugin').projectDir = file('plugin')
+project(':panorama-graph-spring-test').projectDir = file('spring-test')
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        // Os plugins CycloneDX e dependency-analysis, que o plugin aplica, são publicados no portal de plugins.
+        gradlePluginPortal()
+    }
+}

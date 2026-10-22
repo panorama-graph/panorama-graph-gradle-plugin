@@ -1,0 +1,48 @@
+// O plugin e a biblioteca de teste saem sempre na mesma versão: o plugin põe no classpath de teste a biblioteca da
+// própria versão.
+//   ./gradlew check                                         testes
+//   ./gradlew publishToMavenLocal                           no ~/.m2, para testar num projeto
+//   ./gradlew -PprojectVersion=0.1.0 publish                no repositório Maven de PUBLISH_REPOSITORY_URL
+//                                                           (com PUBLISH_USERNAME e PUBLISH_PASSWORD)
+subprojects {
+    group = 'panorama-graph'
+    version = providers.gradleProperty('projectVersion')
+        .orElse(providers.environmentVariable('PROJECT_VERSION'))
+        .orElse('0.1.0-SNAPSHOT')
+        .get()
+
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    java {
+        withSourcesJar()
+    }
+
+    // Java 17: o mínimo do Gradle 9 e do Spring Framework 7. Os projetos que aplicam o plugin podem estar em qualquer
+    // versão a partir dela.
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 17
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
+
+    publishing {
+        repositories {
+            String url = providers.environmentVariable('PUBLISH_REPOSITORY_URL').orNull
+            if (url) {
+                maven {
+                    name = 'target'
+                    setUrl(url)
+                    allowInsecureProtocol = url.startsWith('http://')
+                    credentials {
+                        username = providers.environmentVariable('PUBLISH_USERNAME').orNull
+                        password = providers.environmentVariable('PUBLISH_PASSWORD').orNull
+                    }
+                }
+            }
+        }
+    }
+}

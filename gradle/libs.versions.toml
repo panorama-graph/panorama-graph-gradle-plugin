@@ -1,0 +1,23 @@
+[versions]
+asm = "9.9.1"
+cyclonedx = "3.4.1"
+dependency-analysis = "3.19.2"
+junit = "5.12.2"
+assertj = "3.27.3"
+spring-boot = "4.1.0"
+jakarta-persistence = "3.2.0"
+spring-data-mongodb = "5.1.0"
+
+[libraries]
+asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
+asm-tree = { module = "org.ow2.asm:asm-tree", version.ref = "asm" }
+asm-analysis = { module = "org.ow2.asm:asm-analysis", version.ref = "asm" }
+# Plugins que o panorama-graph aplica no projeto, de onde tira o SBOM e o uso de dependências.
+cyclonedx-gradle-plugin = { module = "org.cyclonedx:cyclonedx-gradle-plugin", version.ref = "cyclonedx" }
+dependency-analysis-gradle-plugin = { module = "com.autonomousapps:dependency-analysis-gradle-plugin", version.ref = "dependency-analysis" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+# Só nos testes do analisador de acesso a dados, para compilar as classes de exemplo.
+jakarta-persistence-api = { module = "jakarta.persistence:jakarta.persistence-api", version.ref = "jakarta-persistence" }
+spring-data-mongodb = { module = "org.springframework.data:spring-data-mongodb", version.ref = "spring-data-mongodb" }

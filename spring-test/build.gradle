@@ -1,0 +1,34 @@
+plugins {
+    id 'java-library'
+}
+
+// O Spring vem do projeto que usa a biblioteca: aqui ele só compila. Sem Spring no classpath de teste, nada desta
+// biblioteca é carregado.
+dependencies {
+    compileOnly platform(libs.spring.boot.dependencies)
+    compileOnly 'org.springframework.boot:spring-boot-test'
+    compileOnly 'org.springframework:spring-test'
+    compileOnly 'org.springframework:spring-web'
+    compileOnly 'org.springframework:spring-webmvc'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api'
+
+    testImplementation platform(libs.spring.boot.dependencies)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework:spring-web'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        // Para os testes funcionais do plugin.
+        maven {
+            name = 'build'
+            url = rootProject.layout.buildDirectory.dir('test-repository')
+        }
+    }
+}

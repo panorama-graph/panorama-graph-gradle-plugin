@@ -1,0 +1,46 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+dependencies {
+    implementation libs.asm
+    implementation libs.asm.tree
+    implementation libs.asm.analysis
+    implementation libs.cyclonedx.gradle.plugin
+    implementation libs.dependency.analysis.gradle.plugin
+
+    testImplementation platform(libs.junit.bom)
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation libs.assertj
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation gradleTestKit()
+    testImplementation libs.spring.data.mongodb
+    testImplementation libs.jakarta.persistence.api
+}
+
+gradlePlugin {
+    plugins {
+        panoramaGraph {
+            id = 'panorama-graph'
+            implementationClass = 'panoramagraph.gradle.PanoramaGraphPlugin'
+            displayName = 'panorama-graph'
+            description = 'Gera em build/architecture o que o build sabe do componente, para o graph-publish publicar no panorama-graph.'
+        }
+    }
+}
+
+processResources {
+    inputs.property('group', project.group.toString())
+    inputs.property('version', project.version.toString())
+    filesMatching('panoramagraph/gradle/plugin.properties') {
+        expand(group: project.group, version: project.version)
+    }
+}
+
+// Os testes funcionais aplicam o plugin num projeto de exemplo, com a biblioteca de teste publicada no repositório
+// local de Maven do próprio build.
+tasks.named('test') {
+    dependsOn ':panorama-graph-spring-test:publishMavenJavaPublicationToBuildRepository'
+    systemProperty 'panoramaGraph.testRepository', rootProject.layout.buildDirectory.dir('test-repository').get().asFile.absolutePath
+    systemProperty 'panoramaGraph.version', project.version.toString()
+}
