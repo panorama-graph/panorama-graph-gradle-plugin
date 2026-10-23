@@ -1,4 +1,4 @@
-# gradle-plugin
+# panorama-graph-gradle-plugin
 
 Plugin Gradle `panorama-graph`: a tarefa `architectureArtifacts` reúne em `build/architecture` o que o build sabe do componente, e a `architecturePublish` envia esse diretório ao `graph-receiver` do grafo, que o traduz e publica (como o `./gradlew sonar` envia a análise ao servidor). Funciona sem configuração em qualquer projeto Java, e gera só o que o projeto tem como gerar. Os plugins de build de onde tira o SBOM e o uso de dependências (CycloneDX e dependency-analysis) vêm com ele: o projeto não precisa declará-los.
 
@@ -51,7 +51,7 @@ O plugin não pressupõe biblioteca nenhuma do projeto. Os plugins de build de o
 | `openapi.json` | Spring MVC com springdoc | Idem, pelo MockMvc, sem subir a aplicação nem abrir porta |
 | `asyncapi.json` | Spring MVC com Springwolf | Idem |
 
-Os formatos próprios (manifesto, aplicação, clientes HTTP, acesso a dados) estão especificados em JSON Schema em [../adapters/schemas/](https://github.com/panorama-graph/adapters/tree/main/schemas). Os demais são padrões de fora (CycloneDX, OpenAPI, AsyncAPI, Pact).
+Os formatos próprios (manifesto, aplicação, clientes HTTP, acesso a dados) estão especificados em JSON Schema em [panorama-graph-adapters/schemas/](https://github.com/panorama-graph/panorama-graph-adapters/tree/main/schemas). Os demais são padrões de fora (CycloneDX, OpenAPI, AsyncAPI, Pact).
 
 ## Configurar
 
@@ -123,7 +123,7 @@ Sem os testes saem o manifesto, o SBOM, o uso de dependências e o acesso a dado
 
 ## No CI
 
-O job de testes roda `./gradlew architectureArtifacts` e guarda `build/architecture/` como artefato do pipeline; um job seguinte roda `./gradlew architecturePublish` com esse diretório (em MR, com `-PpanoramaGraph.dryRun`). O pipeline não precisa de imagem do grafo. Para builds que não são Gradle, o [graph-publish](https://github.com/panorama-graph/adapters#no-pipeline) faz o mesmo de uma imagem, e o pacote também pode ir por `curl` ([graph-receiver](https://github.com/panorama-graph/adapters#graph-receiver)).
+O job de testes roda `./gradlew architectureArtifacts` e guarda `build/architecture/` como artefato do pipeline; um job seguinte roda `./gradlew architecturePublish` com esse diretório (em MR, com `-PpanoramaGraph.dryRun`). O pipeline não precisa de imagem do grafo. Para builds que não são Gradle, o [graph-publish](https://github.com/panorama-graph/panorama-graph-adapters#no-pipeline) faz o mesmo de uma imagem, e o pacote também pode ir por `curl` ([graph-receiver](https://github.com/panorama-graph/panorama-graph-adapters#graph-receiver)).
 
 ## Desenvolvimento
 
