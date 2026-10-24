@@ -94,7 +94,7 @@ class ApplicationTest {
 | `panoramaGraph.version` | Versão do artefato, quando o pipeline a calcula depois do build que gerou o manifesto |
 | `panoramaGraph.kind` | `kind` do componente no grafo (padrão: service) |
 
-A identidade do componente (repositório e commit) vem do `manifest.json`, que o build gera com as variáveis do CI (GitLab, GitHub) ou com o git.
+A identidade do componente vem de dois arquivos. O nome, que é a chave do componente no grafo, vem do `application.json` (o `spring.application.name`); sem ele, é o fim do caminho do repositório. O repositório e o commit vêm do `manifest.json`, que o build gera com as variáveis do CI (GitLab, GitHub) ou com o git.
 
 **Biblioteca de vários módulos.** Aplicado na raiz de um projeto de vários módulos sem código próprio (sem o plugin `java`), o plugin descreve o repositório inteiro, num retrato só: o manifesto, com os pacotes que todos os módulos publicam e a stack dos módulos Java (na versão mais nova, se divergem), e o SBOM e o uso de dependências juntados dos módulos Java (o plugin aplica neles o CycloneDX e o dependency-analysis). Um módulo do próprio repositório não entra como biblioteca: o que ele traz conta pelas dependências de fora que o trazem. `architecturePublish` envia o retrato. Com `componentKind = 'library'`, o grafo liga o repositório aos componentes que dependem dos pacotes dele (`library_usage` pelo componente). Aplique-o só na raiz: cada módulo publicaria um retrato do mesmo componente.
 
